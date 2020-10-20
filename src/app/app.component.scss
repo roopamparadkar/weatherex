@@ -1,0 +1,27 @@
+.flexbox {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: auto;
+    align-content: flex-start
+  }
+  .item {
+    flex: 0 0 auto;
+    margin: 6px;
+    height: 250px;
+    width: 250px;
+  }
+  .sunny{
+    background-image: url('../assets/images/sunny.jpg');
+    background-position:right;
+  }
+  .rainy{
+    background-image: url('../assets/images/rainy.jpg');
+    background-position: bottom;
+  }
+  .cloudy{
+    background-image: url('../assets/images/cloudy.jpg');
+    background-size: auto;
+    background-position: center;
+  }
