@@ -11,7 +11,7 @@ import { timer } from 'rxjs';
 })
 export class AppComponent implements OnInit, OnDestroy {
 
-  title = 'wheatherex';
+  title = 'weatherex';
   weatherExist = false;
   noCity = false;
   cityName = new FormControl('');
