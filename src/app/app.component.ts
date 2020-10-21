@@ -7,51 +7,99 @@ import { timer } from 'rxjs';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit, OnDestroy {
 
-  title = 'weatherex';
+  constructor(
+    private httpClient: HttpClient,
+  ) { }
+
+  title = 'Weatherex';
   weatherExist = false;
-  noCity = false;
-  cityName = new FormControl('');
+  cityName0 = new FormControl('');
+  cityName1 = new FormControl('');
+  cityName2 = new FormControl('');
+  cityName3 = new FormControl('');
+  cityName4 = new FormControl('');
+  cityName5 = new FormControl('');
+  cityName6 = new FormControl('');
+  cityName7 = new FormControl('');
+  cityName8 = new FormControl('');
 
-  weatherData = {};
-  weatherIcon: string;
-  iconUrl: string;
   localData = {};
-  getWeatherSubscription: Subscription;
-
-  constructor(private httpClient: HttpClient) { }
 
 
-  getWeather() {
-    this.getWeatherSubscription = timer(0, 5000)
-      .subscribe(() => {
-        this.httpClient.get(`https://api.openweathermap.org/data/2.5/weather?q=${this.cityName.value}&units=metric&appid=082b6b4542f8165adcc1deae4ebe2258`)
+  allWeatherData = [
+    {
+      'weatherData': null,
+      'iconUrl': '',
+      'formController': this.cityName0
+    },
+    {
+      'weatherData': null,
+      'iconUrl': '',
+      'formController': this.cityName1
+    },
+    {
+      'weatherData': null,
+      'iconUrl': '',
+      'formController': this.cityName2
+    },
+    {
+      'weatherData': null,
+      'iconUrl': '',
+      'formController': this.cityName3
+    },
+    {
+      'weatherData': null,
+      'iconUrl': '',
+      'formController': this.cityName4
+    },
+    {
+      'weatherData': null,
+      'iconUrl': '',
+      'formController': this.cityName5
+    },
+    {
+      'weatherData': null,
+      'iconUrl': '',
+      'formController': this.cityName6
+    },
+    {
+      'weatherData': null,
+      'iconUrl': '',
+      'formController': this.cityName7
+    },
+    {
+      'weatherData': null,
+      'iconUrl': '',
+      'formController': this.cityName8
+    },
+  ]
+
+  getWeather(index, formController: FormControl) {
+  
+    // subscriptionAlias = timer(0, 5000)
+    //   .subscribe(() => {
+        this.httpClient.get(`https://api.openweathermap.org/data/2.5/weather?q=${formController.value}&units=metric&appid=082b6b4542f8165adcc1deae4ebe2258`)
           .subscribe(
             (result: any) => {
-              this.weatherData = result;
-              const weatherData = result;
-              const weatherIcon = weatherData.weather[0].icon
-              this.iconUrl = `http://openweathermap.org/img/wn/${weatherIcon}.png`
               this.weatherExist = true;
-              localStorage.setItem('weatherData', JSON.stringify(this.weatherData));
-              localStorage.setItem('iconUrl', this.iconUrl);
+              this.allWeatherData[index].weatherData = result;
+              this.allWeatherData[index].iconUrl = `http://openweathermap.org/img/wn/${result.weather[0].icon}.png`              
+              // localStorage.setItem('weatherData', JSON.stringify(this.allWeatherData));
             },
             error => {
-              this.noCity = true;
-              this.cityName.setErrors({ valid: false });
+              formController.setErrors({ noCity: true });
               console.error(error)
             })
-      })
+      // })
   }
 
-  updateWeather() {
-    this.noCity = false;
+  updateWeather(index) {
     this.weatherExist = false;
     localStorage.clear();
-    this.getWeatherSubscription.unsubscribe();
   }
 
   checkWeatherConditions(weather) {
@@ -70,16 +118,15 @@ export class AppComponent implements OnInit, OnDestroy {
 
   }
   ngOnInit(): void {
-    if (localStorage.getItem('weatherData')) {
-      this.weatherExist = true;
-      this.weatherData = JSON.parse(localStorage.getItem('weatherData'));
-      this.iconUrl = localStorage.getItem('iconUrl');
-    }
-    
+    // if (localStorage.getItem('weatherData')) {
+    //   this.weatherExist = true;
+    //   this.weatherData = JSON.parse(localStorage.getItem('weatherData'));
+    //   this.iconUrl = localStorage.getItem('iconUrl');
+    // }
+
   }
 
   ngOnDestroy(): void {
     localStorage.clear();
-    this.getWeatherSubscription.unsubscribe();
   }
 }

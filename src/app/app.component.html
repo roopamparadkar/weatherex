@@ -3,35 +3,34 @@
 </mat-toolbar>
 <div class="container">
   <div class="flexbox">
-    <div class="item mx-auto"*ngFor="let dummy of ' '.repeat(9).split(''), let x = index">
-
-      <mat-card *ngIf="weatherExist" class="text-center"
-       [ngClass]="checkWeatherConditions(weatherData.weather[0].main)">
+    <div class="item mx-auto" *ngFor="let weatherData of allWeatherData, let x = index">
+      <mat-card *ngIf="weatherExist && weatherData.weatherData !== null" class="text-center"
+       [ngClass]="checkWeatherConditions(weatherData.weatherData.weather[0].main)">
         <mat-card-content>
           <h1 class="m-0">
-            {{weatherData.name }}, {{weatherData.sys.country}}
+            {{weatherData.weatherData.name }}, {{weatherData.weatherData.sys.country}}
           </h1>
-          <img [src]="iconUrl" alt="weather_icon">
+          <img [src]="weatherData.iconUrl" alt="weather_icon">
           <p>
-            {{weatherData.weather[0].description}}
+            {{weatherData.weatherData.weather[0].description}}
           </p>
-          <h1>{{weatherData.main.temp}} &#8451;</h1>
+          <h1>{{weatherData.weatherData.main.temp}} &#8451;</h1>
           <p>
-            H:{{weatherData.main.temp_max}}&deg; | L:{{weatherData.main.temp_min}}&deg;
+            H:{{weatherData.weatherData.main.temp_max}}&deg; | L:{{weatherData.weatherData.main.temp_min}}&deg;
           </p>
         </mat-card-content>
         <mat-card-actions>
-          <button (click)="updateWeather()" mat-raised-button >Edit</button>
+          <button (click)="updateWeather(x)" mat-raised-button >Edit</button>
         </mat-card-actions>
       </mat-card>
 
-      <mat-card *ngIf="!weatherExist" class="text-center">
+      <mat-card *ngIf="!weatherExist || weatherData.weatherData == null" class="text-center">
         <mat-form-field class="example-full-width">
           <mat-label>City Name</mat-label>
-          <input matInput placeholder="Chennai" (keyup.enter)="getWeather()" matInput [formControl]="cityName">
+          <input matInput placeholder="Chennai" (keyup.enter)="getWeather(x,weatherData.formController)" matInput [formControl]="weatherData.formController">
         </mat-form-field>
-        <mat-error class="mb-2" *ngIf="noCity">No city found, Please re-enter</mat-error>
-        <button (click)="getWeather()" mat-raised-button color="primary">Get Weather</button>
+        <mat-error class="mb-2" *ngIf="!weatherData.formController.valid">No city found, Please re-enter</mat-error>
+        <button (click)="getWeather(x,weatherData.formController)" mat-raised-button color="primary">Get Weather</button>
 
       </mat-card>
     </div>
