@@ -97,9 +97,9 @@ export class AppComponent implements OnInit, OnDestroy {
       // })
   }
 
-  updateWeather(index) {
-    this.weatherExist = false;
-    localStorage.clear();
+  updateWeather(index,formController:FormControl) {
+   this.allWeatherData[index].weatherData = null;
+   formController.setValue(null);
   }
 
   checkWeatherConditions(weather) {
