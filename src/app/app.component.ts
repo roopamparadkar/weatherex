@@ -15,6 +15,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private httpClient: HttpClient,
   ) { }
 
+  sub1 : Subscription
   title = 'Weatherex';
   weatherExist = false;
   cityName0 = new FormControl('');
@@ -34,7 +35,8 @@ export class AppComponent implements OnInit, OnDestroy {
     {
       'weatherData': null,
       'iconUrl': '',
-      'formController': this.cityName0
+      'formController': this.cityName0,
+      'subAlias':"this.sub1"
     },
     {
       'weatherData': null,
@@ -78,10 +80,10 @@ export class AppComponent implements OnInit, OnDestroy {
     },
   ]
 
-  getWeather(index, formController: FormControl) {
-  
-    // subscriptionAlias = timer(0, 5000)
-    //   .subscribe(() => {
+  getWeather(index, formController: FormControl, subAlias:Subscription) {
+    
+    subAlias = timer(0, 5000)
+      .subscribe(() => {
         this.httpClient.get(`https://api.openweathermap.org/data/2.5/weather?q=${formController.value}&units=metric&appid=082b6b4542f8165adcc1deae4ebe2258`)
           .subscribe(
             (result: any) => {
@@ -94,12 +96,13 @@ export class AppComponent implements OnInit, OnDestroy {
               formController.setErrors({ noCity: true });
               console.error(error)
             })
-      // })
+      })
   }
 
-  updateWeather(index,formController:FormControl) {
+  updateWeather(index,formController:FormControl,subAlias:Subscription) {
    this.allWeatherData[index].weatherData = null;
-   formController.setValue(null);
+  //  formController.setValue(null);
+   subAlias.unsubscribe();
   }
 
   checkWeatherConditions(weather) {
