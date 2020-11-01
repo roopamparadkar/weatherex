@@ -15,7 +15,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private httpClient: HttpClient,
   ) { }
 
-  sub1 : Subscription
+  sub1: Subscription
   title = 'Weatherex';
   weatherExist = false;
   cityName0 = new FormControl('');
@@ -35,8 +35,7 @@ export class AppComponent implements OnInit, OnDestroy {
     {
       'weatherData': null,
       'iconUrl': '',
-      'formController': this.cityName0,
-      'subAlias':"this.sub1"
+      'formController': this.cityName0
     },
     {
       'weatherData': null,
@@ -80,29 +79,35 @@ export class AppComponent implements OnInit, OnDestroy {
     },
   ]
 
-  getWeather(index, formController: FormControl, subAlias:Subscription) {
+  allWeatherSubscriptions : any = [1,2,3,4,5,6,7,8,9];
+
+  getWeather(index, formController: FormControl) {
+    console.log(index);
     
-    subAlias = timer(0, 5000)
+    const subscription = timer(0,30000)
       .subscribe(() => {
         this.httpClient.get(`https://api.openweathermap.org/data/2.5/weather?q=${formController.value}&units=metric&appid=082b6b4542f8165adcc1deae4ebe2258`)
           .subscribe(
             (result: any) => {
               this.weatherExist = true;
               this.allWeatherData[index].weatherData = result;
-              this.allWeatherData[index].iconUrl = `http://openweathermap.org/img/wn/${result.weather[0].icon}.png`              
+              this.allWeatherData[index].iconUrl = `http://openweathermap.org/img/wn/${result.weather[0].icon}.png`
               // localStorage.setItem('weatherData', JSON.stringify(this.allWeatherData));
+              this.allWeatherSubscriptions.splice(index,1, subscription);
+              
             },
             error => {
               formController.setErrors({ noCity: true });
               console.error(error)
             })
-      })
+          })
   }
 
-  updateWeather(index,formController:FormControl,subAlias:Subscription) {
-   this.allWeatherData[index].weatherData = null;
-  //  formController.setValue(null);
-   subAlias.unsubscribe();
+  updateWeather(index, formController: FormControl) {
+    this.allWeatherSubscriptions[index].unsubscribe();
+    this.allWeatherData[index].weatherData = null;
+    formController.setValue(null);
+    delete this.allWeatherSubscriptions[index]
   }
 
   checkWeatherConditions(weather) {
