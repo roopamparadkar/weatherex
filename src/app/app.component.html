@@ -20,7 +20,7 @@
           </p>
         </mat-card-content>
         <mat-card-actions>
-          <button (click)="updateWeather(x,weatherData.formController)" mat-raised-button >Edit</button>
+          <button (click)="updateWeather(x,weatherData.formController,weatherData.subAlias)" mat-raised-button >Edit</button>
         </mat-card-actions>
       </mat-card>
 
@@ -30,7 +30,7 @@
           <input matInput placeholder="Chennai" (keyup.enter)="getWeather(x,weatherData.formController)" matInput [formControl]="weatherData.formController">
         </mat-form-field>
         <mat-error class="mb-2" *ngIf="!weatherData.formController.valid">No city found, Please re-enter</mat-error>
-        <button (click)="getWeather(x,weatherData.formController)" mat-raised-button color="primary">Get Weather</button>
+        <button (click)="getWeather(x,weatherData.formController,weatherData.subAlias)" mat-raised-button color="primary">Get Weather</button>
 
       </mat-card>
     </div>

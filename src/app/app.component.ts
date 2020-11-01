@@ -15,6 +15,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private httpClient: HttpClient,
   ) { }
 
+  sub1: Subscription
   title = 'Weatherex';
   weatherExist = false;
   cityName0 = new FormControl('');
@@ -78,28 +79,35 @@ export class AppComponent implements OnInit, OnDestroy {
     },
   ]
 
+  allWeatherSubscriptions : any = [1,2,3,4,5,6,7,8,9];
+
   getWeather(index, formController: FormControl) {
-  
-    // subscriptionAlias = timer(0, 5000)
-    //   .subscribe(() => {
+    console.log(index);
+    
+    const subscription = timer(0,30000)
+      .subscribe(() => {
         this.httpClient.get(`https://api.openweathermap.org/data/2.5/weather?q=${formController.value}&units=metric&appid=082b6b4542f8165adcc1deae4ebe2258`)
           .subscribe(
             (result: any) => {
               this.weatherExist = true;
               this.allWeatherData[index].weatherData = result;
-              this.allWeatherData[index].iconUrl = `http://openweathermap.org/img/wn/${result.weather[0].icon}.png`              
+              this.allWeatherData[index].iconUrl = `http://openweathermap.org/img/wn/${result.weather[0].icon}.png`
               // localStorage.setItem('weatherData', JSON.stringify(this.allWeatherData));
+              this.allWeatherSubscriptions.splice(index,1, subscription);
+              
             },
             error => {
               formController.setErrors({ noCity: true });
               console.error(error)
             })
-      // })
+          })
   }
 
-  updateWeather(index,formController:FormControl) {
-   this.allWeatherData[index].weatherData = null;
-   formController.setValue(null);
+  updateWeather(index, formController: FormControl) {
+    this.allWeatherSubscriptions[index].unsubscribe();
+    this.allWeatherData[index].weatherData = null;
+    formController.setValue(null);
+    delete this.allWeatherSubscriptions[index]
   }
 
   checkWeatherConditions(weather) {

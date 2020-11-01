@@ -131,5 +131,8 @@
       }
     }
   },
-  "defaultProject": "wheatherex"
+  "defaultProject": "wheatherex",
+  "cli": {
+    "analytics": "ae803468-af23-4df3-98c6-aef473d7f293"
+  }
 }
